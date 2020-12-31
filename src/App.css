@@ -37,11 +37,7 @@
   }
 }
 .app {
-  min-height: 100vh;  
-  background: lightblue;
-  justify-content: space-around;
-  align-items: center;
-  display: flex;
+  text-align: center;
 }
 .tweet {
   height: 300px;
@@ -54,7 +50,19 @@
   align-items: center;
 }
 
-.red{
-  color: red;
-  font-size: 50px;
+nav{
+  display: flex;
+  justify-content:space-around;
+  align-items: center;
+  min-height:10vh;
+  background: rgb(133, 150, 156);
+  color: white;
+}
+
+.nav-links{
+  width : 50%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  list-style: none; 
 }
