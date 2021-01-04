@@ -135,29 +135,20 @@ export default function Groups() {
             value={newGroupName}
             onChange={setNewName}
           />
-        {/* <TextField
+        <TextField
             select
             label="Niveau"
             margin="dense"
             fullWidth
-            onChange={handleChange}
+            onChange={setNewLevel}
             helperText="Veuillez sélectionner un niveau"
         >
             {groupLevels.map((group) => (
-            <MenuItem key= {Object.keys(group)[0]} value={savedGroup.level}>
+            <MenuItem key= {Object.keys(group)[0]} value={newGroupLevel}>
                 {group}
             </MenuItem>
             ))}
-        </TextField> */}
-                  <TextField
-            margin="dense"
-            id="level"
-            label="Nom du groupe"
-            type="email"
-            fullWidth
-            value={newGroupLevel}
-            onChange={setNewLevel}
-          />
+        </TextField>
         <TextField
             margin="dense"
             id="description"
