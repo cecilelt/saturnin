@@ -52,7 +52,7 @@ export default function Groups() {
         >
             {tabs}
         </Tabs>
-        {/* <GroupInfo level = {groupNamesList[selectedTab].level} description = {groupNamesList[selectedTab].description} /> */}
+        { <GroupInfo level = {groupNamesList[selectedTab].level} description = {groupNamesList[selectedTab].description} /> }
         </Paper>
     );
 }
