@@ -1,8 +1,9 @@
 import React, {useState} from "react";
-import Tweet from "./pages/Tweet";
+import Teachers from "./pages/Teachers";
 import Drawer from './navigation/drawer';
-import Shop from './pages/Shop';
-import About from './pages/About'
+import Courses from './pages/Courses';
+import Groups from './pages/Groups';
+import Home from './pages/Home'
 import {BrowserRouter as Router,  Switch, Route} from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -19,8 +20,10 @@ function App() {
       <div className = {classes.container}>
         <Drawer />
         <Switch>
-          <Route path='/about' exact component = {About}/>
-          <Route path='/shop' exact component = {Shop}/>
+          <Route path='/' exact component = {Home}/>
+          <Route path='/groupes' exact component = {Groups}/>
+          <Route path='/enseignants' exact component = {Teachers}/>
+          <Route path='/matieres' exact component = {Courses}/>
         </Switch>
       </div>
     </Router>

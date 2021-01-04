@@ -66,9 +66,9 @@ const Drawer = props => {
       onClick: () => history.push("/tests/A20quad1")
     },
     {
-      text: "A20 - Quad 1",
+      text: "A20 - Quad 2",
       icon: <EmojiObjectsIcon />,
-      onClick: () => history.push("/eleves/A20quad2")
+      onClick: () => history.push("/tests/A20quad2")
     }
     ];
   return (
