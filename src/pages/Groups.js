@@ -45,7 +45,7 @@ export default function Groups() {
         setNewGroupDescription(event.target.value) 
     };
 
-    const handleChange = (event, newValue) => {
+    const changeTab = (event, newValue) => {
         setSelectedTab(newValue);
     };
 
@@ -71,11 +71,11 @@ export default function Groups() {
             savedGroup.name = "";
             savedGroup.level = 0;
             savedGroup.description = "";
+            setNewGroupName("");
+            setNewGroupLevel(0);
+            setNewGroupDescription("");
+            window.location.reload(false);
         });
-        setNewGroupName("");
-        setNewGroupLevel(0);
-        setNewGroupDescription("");
-        window.location.reload(false);
     };
 
     // Executed everytime the component is rendered
@@ -107,14 +107,14 @@ export default function Groups() {
         <Paper className={classes.root}>
         <Tabs
             value={selectedTab}
-            onChange={handleChange}
+            onChange={changeTab}
             indicatorColor="primary"
             textColor="primary"
             centered
         >
             {tabs}
         </Tabs>
-            <GroupInfo groupLevel = {groupNamesList[selectedTab].level} description = {groupNamesList[selectedTab].description} />
+            <GroupInfo groupId = {groupNamesList[selectedTab]._id} groupLevel = {groupNamesList[selectedTab].level} description = {groupNamesList[selectedTab].description} />
 
         <Button variant="outlined" color="primary" onClick={handleClickOpen}>
             Ajouter un groupe
