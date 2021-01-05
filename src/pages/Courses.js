@@ -1,4 +1,4 @@
-import React, {useState, Component} from "react";
+import React, {Component} from "react";
 import axios from 'axios';
 
 export default class Courses extends Component {

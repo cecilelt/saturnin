@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import Teachers from "./pages/Teachers";
 import Drawer from './navigation/drawer';
 import Courses from './pages/Courses';

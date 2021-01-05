@@ -14,6 +14,7 @@ import Slide from '@material-ui/core/Slide';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
@@ -37,7 +38,6 @@ function GroupInfo(props) {
 
     function deleteGroup () {
         setOpen(false);
-        console.log(props.groupId);
         axios.delete("/groups/" + props.groupId).then(response => {
             console.log(response);
             window.location.reload(false);
@@ -46,8 +46,8 @@ function GroupInfo(props) {
     }
     return(
         <div >
-            <h1>{props.groupLevel}</h1>
-            <h1>{props.description}</h1>
+            <h1>Niveau : {props.groupLevel}</h1>
+            <h1>Description : {props.description}</h1>
             <IconButton onClick={openWarning} aria-label="delete" className={classes.margin}>
                 <DeleteIcon />
             </IconButton>
