@@ -21,6 +21,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -57,14 +59,17 @@ function Teachers(props) {
   const [open, setOpen] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [currentTeacher, setCurrentTeacher] = useState("");
 
   let modifiedTeacher;
-  
+
   useEffect(() => {
     getAllTeachers();
   });
 
+  // USE STATE :
   const setFirstName = (event) => {
     setNewFirstName(event.target.value);
   };
@@ -89,21 +94,37 @@ function Teachers(props) {
     setNewEmail(event.target.value);
   };
 
-  function getAllTeachers() {
-    axios.get("/teachers").then((response) => {
-      setTeachersList(response.data);
-    });
-  }
+  // HANDLE FUNCTIONS :
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
 
-   const handleCloseEditForm = () => {
+  const handleCloseEditForm = () => {
     setOpenEditForm(false);
+  };
+
+  const handleCloseSnackbar = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
   };
 
   const handleClickOpen = () => {
     setOpen(true);
+  };
+
+  const cancelConfirmation = () => {
+    setOpenConfirmation(false);
   };
 
   const openWarning = (rowId) => {
@@ -117,10 +138,16 @@ function Teachers(props) {
     getSpecificTeacher(rowId);
   }
 
+  // HTTP CALLS :
+  function getAllTeachers() {
+    axios.get("/teachers").then((response) => {
+      setTeachersList(response.data);
+    });
+  }
+
   function getSpecificTeacher(rowId) {
     axios.get("/teachers/" + rowId).then((response) => {
       modifiedTeacher = response.data;
-      console.log(modifiedTeacher);
       setNewFirstName(modifiedTeacher.firstName);
       setNewLastName(modifiedTeacher.lastName);
       setNewWorkPhoneNumber(modifiedTeacher.workPhoneNumber);
@@ -131,28 +158,17 @@ function Teachers(props) {
     });
   }
 
-  const cancelConfirmation = () => {
-    setOpenConfirmation(false);
-  };
-
   function deleteItem(i) {
     axios.delete("/teachers/" + currentTeacher).then((response) => {
       getAllTeachers();
-      window.location.reload(false);
+      setOpenConfirmation(false);
+      setSnackbarMessage("Enseignant supprimé!");
+      setOpenSnackbar(true);
     });
   }
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
   function submitTeacher() {
     setOpen(false);
-
     const savedTeacher = {
       firstName: newFirstName,
       lastName: newLastName,
@@ -164,6 +180,8 @@ function Teachers(props) {
 
     axios.post("/teachers", savedTeacher).then((response) => {
       resetTextFields();
+      setOpenSnackbar(true);
+      setSnackbarMessage("Enseignant ajouté!");
     });
   }
 
@@ -179,10 +197,13 @@ function Teachers(props) {
       email: newEmail,
     };
 
-    axios.patch("/teachers/" + currentTeacher, modifiedTeacher).then((response) => {
-      console.log(response);
-      resetTextFields();
-    });
+    axios
+      .patch("/teachers/" + currentTeacher, modifiedTeacher)
+      .then((response) => {
+        resetTextFields();
+        setOpenSnackbar(true);
+        setSnackbarMessage("Enseignant modifié!");
+      });
   }
 
   function resetTextFields() {
@@ -238,7 +259,7 @@ function Teachers(props) {
                     <TableCell>
                       <IconButton
                         onClick={() => openEditingForm(row._id)}
-                        color="secondary"
+                        color="primary"
                       >
                         <EditIcon />
                       </IconButton>
@@ -473,6 +494,17 @@ function Teachers(props) {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* SNACKBARS */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success">
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Paper>
   );
 }
