@@ -15,6 +15,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
+import Tooltip from '@material-ui/core/Tooltip';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -45,6 +46,7 @@ const columns = [
   { id: "cellphoneNumber", label: "Cellulaire", minWidth: 100 },
   { id: "email", label: "Courriel", minWidth: 100 },
 ];
+
 function Teachers(props) {
   const classes = useStyles();
   const [teachersList, setTeachersList] = useState([{}]);
@@ -257,21 +259,25 @@ function Teachers(props) {
                     {/* BOUTON - MODIFIER UN ENSEIGNANT */}
 
                     <TableCell>
-                      <IconButton
-                        onClick={() => openEditingForm(row._id)}
-                        color="primary"
-                      >
-                        <EditIcon />
-                      </IconButton>
+                      <Tooltip title="Modifier">
+                        <IconButton
+                          onClick={() => openEditingForm(row._id)}
+                          color="primary"
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
 
                       {/* BOUTON - SUPPRIMER UN ENSEIGNANT */}
 
-                      <IconButton
-                        onClick={() => openWarning(row._id)}
-                        color="secondary"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      <Tooltip title="Supprimer">
+                        <IconButton
+                          onClick={() => openWarning(row._id)}
+                          color="secondary"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 );

@@ -33,6 +33,7 @@ export default function Groups() {
 
   // USE STATE :
   useEffect(() => {
+    getAllLevels();
     getAllGroups();
   }, []);
 
@@ -51,6 +52,10 @@ export default function Groups() {
   const changeTab = (event, newValue) => {
     setSelectedTab(newValue);
   };
+
+  const tabs = groupNamesList.map((tab) => {
+    return <Tab key={tab._id} label={tab.groupName} />;
+  });
 
   // HANDLE FUNCTIONS:
   const handleClickOpen = () => {
@@ -82,10 +87,6 @@ export default function Groups() {
     });
   }
 
-  const tabs = groupNamesList.map((tab) => {
-    return <Tab key={tab._id} label={tab.groupName} />;
-  });
-
   function getAllGroups() {
     axios.get("/groups").then((response) => {
       setGroupNamesList(response.data);
@@ -95,12 +96,13 @@ export default function Groups() {
   function getAllLevels() {
     axios.get("/groups/levels").then((response) => {
       setGroupLevels(response.data);
-      console.log(response.data);
     });
   }
 
   return (
     <Paper className={classes.root}>
+      {/* TITRE DES ONGLETS */}
+
       <Tabs
         value={selectedTab}
         onChange={changeTab}
@@ -110,15 +112,24 @@ export default function Groups() {
       >
         {tabs}
       </Tabs>
+
+      {/* INFORMATIONS DES GROUPES */}
+
       <GroupInfo
+        groupLevels={groupLevels}
         groupId={groupNamesList[selectedTab]._id}
         groupLevel={groupNamesList[selectedTab].level}
         description={groupNamesList[selectedTab].description}
       />
 
+      {/* BOUTON - AJOUTER UN GROUPE */}
+
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         Ajouter un groupe
       </Button>
+
+      {/* FORMULAIRE D'AJOUT D'UN GROUPE */}
+
       <Dialog
         open={open}
         onClose={handleClose}
@@ -131,6 +142,7 @@ export default function Groups() {
             description du groupe désiré.
           </DialogContentText>
           <TextField
+            variant="outlined"
             autoFocus
             margin="dense"
             id="name"
@@ -141,6 +153,7 @@ export default function Groups() {
             onChange={setNewName}
           />
           <TextField
+            variant="outlined"
             select
             label="Niveau"
             margin="dense"
@@ -155,6 +168,7 @@ export default function Groups() {
             ))}
           </TextField>
           <TextField
+            variant="outlined"
             margin="dense"
             id="description"
             label="Description"
