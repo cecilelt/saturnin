@@ -112,6 +112,7 @@ function Teachers(props) {
 
   const handleCloseEditForm = () => {
     setOpenEditForm(false);
+    resetTextFields();
   };
 
   const handleCloseSnackbar = (reason) => {
@@ -127,6 +128,7 @@ function Teachers(props) {
 
   const cancelConfirmation = () => {
     setOpenConfirmation(false);
+    resetTextFields();
   };
 
   const openWarning = (rowId) => {
@@ -161,7 +163,7 @@ function Teachers(props) {
   }
 
   function deleteItem(i) {
-    axios.delete("/teachers/" + currentTeacher).then((response) => {
+    axios.delete("/teachers/" +  currentTeacher).then((response) => {
       getAllTeachers();
       setOpenConfirmation(false);
       setSnackbarMessage("Enseignant supprimé!");

@@ -20,10 +20,10 @@ function App() {
       <div className={classes.container}>
         <Drawer />
         <Switch>
-          <Route path="/login" exact component={Login} />
-          <Route path="/groupes" exact component={Groups} />
-          <Route path="/enseignants" exact component={Teachers} />
-          <Route path="/matieres" exact component={Courses} />
+          <Route key="login" path="/login" exact component={Login} />
+          <Route key= "groups" path="/groupes" exact component={Groups} />
+          <Route key="teachers" path="/enseignants" exact component={Teachers} />
+          <Route key="courses" path="/matieres" exact component={Courses} />
         </Switch>
       </div>
     </Router>

@@ -53,9 +53,16 @@ export default function Groups() {
     setSelectedTab(newValue);
   };
 
+  // FUNCTIONS
   const tabs = groupNamesList.map((tab) => {
     return <Tab key={tab._id} label={tab.groupName} />;
   });
+
+  function resetTextFields() {
+    setNewGroupName("");
+    setNewGroupLevel(0);
+    setNewGroupDescription("");
+  }
 
   // HANDLE FUNCTIONS:
   const handleClickOpen = () => {
@@ -65,6 +72,7 @@ export default function Groups() {
 
   const handleClose = () => {
     setOpen(false);
+    resetTextFields();
   };
 
   // HTTP CALLS:
@@ -80,9 +88,7 @@ export default function Groups() {
       savedGroup.name = "";
       savedGroup.level = 0;
       savedGroup.description = "";
-      setNewGroupName("");
-      setNewGroupLevel(0);
-      setNewGroupDescription("");
+      resetTextFields();
       window.location.reload(false);
     });
   }
@@ -162,7 +168,7 @@ export default function Groups() {
             helperText="Veuillez sélectionner un niveau"
           >
             {groupLevels.map((group) => (
-              <MenuItem key={Object.keys(group)[0]} value={newGroupLevel}>
+              <MenuItem key={group} value={newGroupLevel}>
                 {group}
               </MenuItem>
             ))}
