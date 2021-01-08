@@ -51,7 +51,7 @@ const Drawer = props => {
     {
       text: "11 BI",
       icon: <SchoolIcon />,
-      onClick: () => history.push("/eleves/11BI")
+      onClick: () => history.push("/eleves")
     },
     {
       text: "12 BI",

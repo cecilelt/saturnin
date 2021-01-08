@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../App.css";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
@@ -9,13 +8,15 @@ import TableBody from "@material-ui/core/TableBody";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import FindInPageIcon from "@material-ui/icons/FindInPage";
+import SendIcon from "@material-ui/icons/Send";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from "@material-ui/core/Tooltip";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -41,37 +42,30 @@ const useStyles = makeStyles({
 const columns = [
   { id: "firstName", label: "Prénom", minWidth: 75 },
   { id: "lastName", label: "Nom de famille", minWidth: 100 },
-  { id: "workPhoneNumber", label: "Bureau", minWidth: 100 },
-  { id: "homePhoneNumber", label: "Maison", minWidth: 100 },
-  { id: "cellphoneNumber", label: "Cellulaire", minWidth: 100 },
+  { id: "group", label: "Groupe", minWidth: 100 },
   { id: "email", label: "Courriel", minWidth: 100 },
 ];
 
-function Teachers(props) {
+export default function Courses() {
   const classes = useStyles();
-  const [teachersList, setTeachersList] = useState([{}]);
-  const [newFirstName, setNewFirstName] = useState("");
-  const [newLastName, setNewLastName] = useState("");
-  const [newWorkPhoneNumber, setNewWorkPhoneNumber] = useState("");
-  const [newHomePhoneNumber, setNewHomePhoneNumber] = useState("");
-  const [newCellphoneNumber, setNewCellphoneNumber] = useState("");
-  const [newEmail, setNewEmail] = useState("");
+  const [studentsList, setStudentsList] = useState([{}]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [open, setOpen] = useState(false);
-  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [openAddStudentForm, setOpenAddStudentForm] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [currentTeacher, setCurrentTeacher] = useState("");
-
-  let modifiedTeacher;
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [currentStudent, setCurrentStudent] = useState("");
+  const [newFirstName, setNewFirstName] = useState("");
+  const [newLastName, setNewLastName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newGroup, setNewGroup] = useState("");
 
   useEffect(() => {
-    getAllTeachers();
+    getAllStudents();
   });
 
-  // USE STATE :
   const setFirstName = (event) => {
     setNewFirstName(event.target.value);
   };
@@ -80,51 +74,48 @@ function Teachers(props) {
     setNewLastName(event.target.value);
   };
 
-  const setWorkPhoneNumber = (event) => {
-    setNewWorkPhoneNumber(event.target.value);
-  };
-
-  const setHomePhoneNumber = (event) => {
-    setNewHomePhoneNumber(event.target.value);
-  };
-
-  const setCellphoneNumber = (event) => {
-    setNewCellphoneNumber(event.target.value);
+  const setGroup = (event) => {
+    setNewGroup(event.target.value);
   };
 
   const setEmail = (event) => {
     setNewEmail(event.target.value);
   };
 
+  function resetTextFields() {
+    setNewFirstName("");
+    setNewLastName("");
+    setNewGroup("");
+    setNewEmail("");
+  }
+
   // HANDLE FUNCTIONS :
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  const handleOpenAddStudentForm = () => {
+    setOpenAddStudentForm(true);
   };
-
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseAddStudentForm = () => {
+    setOpenAddStudentForm(false);
   };
 
   const handleCloseEditForm = () => {
     setOpenEditForm(false);
     resetTextFields();
   };
-
-  const handleCloseSnackbar = (reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnackbar(false);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  function openEditingForm(rowId) {
+    getSpecificStudent(rowId);
+    setOpenEditForm(true);
+    setCurrentStudent(rowId);
+    // console.log(currentStudent);
+  }
 
   const cancelConfirmation = () => {
     setOpenConfirmation(false);
@@ -132,98 +123,112 @@ function Teachers(props) {
   };
 
   const openWarning = (rowId) => {
-    setCurrentTeacher(rowId);
+    setCurrentStudent(rowId);
     setOpenConfirmation(true);
   };
+  const handleCloseSnackbar = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+  // HTTPS CALLS :
 
-  function openEditingForm(rowId) {
-    getSpecificTeacher(rowId);
-    setOpenEditForm(true);
-    setCurrentTeacher(rowId);
-  }
-
-  // HTTP CALLS :
-  function getAllTeachers() {
-    axios.get("/teachers").then((response) => {
-      setTeachersList(response.data);
+  function getAllStudents() {
+    axios.get("/students").then((response) => {
+      setStudentsList(response.data);
     });
   }
 
-  function getSpecificTeacher(rowId) {
-    axios.get("/teachers/" + rowId).then((response) => {
-      modifiedTeacher = response.data;
-      setNewFirstName(modifiedTeacher.firstName);
-      setNewLastName(modifiedTeacher.lastName);
-      setNewWorkPhoneNumber(modifiedTeacher.workPhoneNumber);
-      setNewHomePhoneNumber(modifiedTeacher.homePhoneNumber);
-      setNewCellphoneNumber(modifiedTeacher.cellphoneNumber);
-      setNewEmail(modifiedTeacher.email);
-      setCurrentTeacher(modifiedTeacher._id);
+  function getSpecificStudent(rowId) {
+    axios.get("/students/" + rowId).then((response) => {
+      setNewFirstName(response.data.firstName);
+      setNewLastName(response.data.lastName);
+      setNewGroup(response.data.group);
+      setNewEmail(response.data.email);
+
+      setCurrentStudent(response.data._id);
     });
   }
-
-  function deleteItem(i) {
-    axios.delete("/teachers/" +  currentTeacher).then((response) => {
-      getAllTeachers();
+  function deleteStudent() {
+    axios.delete("/students/" + currentStudent).then((response) => {
+      getAllStudents();
       setOpenConfirmation(false);
-      setSnackbarMessage("Enseignant supprimé!");
+      setSnackbarMessage("Étudiant supprimé!");
       setOpenSnackbar(true);
     });
   }
-
-  function submitTeacher() {
-    setOpen(false);
-    const savedTeacher = {
-      firstName: newFirstName,
-      lastName: newLastName,
-      workPhoneNumber: newWorkPhoneNumber,
-      homePhoneNumber: newHomePhoneNumber,
-      cellphoneNumber: newCellphoneNumber,
-      email: newEmail,
-    };
-
-    axios.post("/teachers", savedTeacher).then((response) => {
-      resetTextFields();
-      setOpenSnackbar(true);
-      setSnackbarMessage("Enseignant ajouté!");
-    });
-  }
-
-  function modifyTeacher() {
+  function modifyStudent() {
     setOpenEditForm(false);
 
-    const modifiedTeacher = {
+    const modifiedStudent = {
       firstName: newFirstName,
       lastName: newLastName,
-      workPhoneNumber: newWorkPhoneNumber,
-      homePhoneNumber: newHomePhoneNumber,
-      cellphoneNumber: newCellphoneNumber,
       email: newEmail,
+      group: newGroup,
     };
 
     axios
-      .patch("/teachers/" + currentTeacher, modifiedTeacher)
+      .patch("/students/" + currentStudent, modifiedStudent)
       .then((response) => {
         resetTextFields();
         setOpenSnackbar(true);
-        setSnackbarMessage("Enseignant modifié!");
+        setSnackbarMessage("Étudiant modifié!");
       });
   }
 
-  function resetTextFields() {
-    setNewFirstName("");
-    setNewLastName("");
-    setNewWorkPhoneNumber("");
-    setNewHomePhoneNumber("");
-    setNewCellphoneNumber("");
-    setNewEmail("");
+  function generatePDF(rowId) {
+    axios.get("/students/" + rowId).then((response) => {
+
+      const savedStudent = {
+        firstName: response.data.firstName,
+        lastName: response.data.lastName,
+        group: response.data.group,
+        email: response.data.email,
+      };
+
+      setNewFirstName(response.data.firstName);
+      setNewLastName(response.data.lastName);
+      setNewGroup(response.data.group);
+      setNewEmail(response.data.email);
+
+      setCurrentStudent(response.data._id);
+
+      axios.post("/students/pdf/create-pdf", savedStudent).then(() =>
+        axios
+          .get("/students/pdf/fetch-pdf", { responseType: "blob" })
+          .then((res) => {
+            const generatedPDF = new Blob([res.data], {
+              type: "application/pdf",
+            });
+            var fileURL = URL.createObjectURL(generatedPDF);
+            window.open(fileURL);
+          })
+      );
+    });
+  }
+
+  function submitStudent() {
+    setOpenAddStudentForm(false);
+    const savedStudent = {
+      firstName: newFirstName,
+      lastName: newLastName,
+      group: newGroup,
+      email: newEmail,
+    };
+
+    axios.post("/students", savedStudent).then((response) => {
+      resetTextFields();
+      setOpenSnackbar(true);
+      setSnackbarMessage("Étudiant ajouté!");
+    });
   }
 
   return (
     <Paper className={classes.root}>
-    <h1>Enseignants</h1>
+      <h1>Étudiants</h1>
 
-      {/* TABLE DES ENSEIGNANTS */}
+      {/* TABLE DES ÉTUDIANTS */}
 
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
@@ -238,13 +243,16 @@ function Teachers(props) {
                   {column.label}
                 </TableCell>
               ))}
+              <TableCell key="bilan" style={{ minWidth: 100 }}>
+                Bilan
+              </TableCell>
               <TableCell key="actions" style={{ minWidth: 100 }}>
                 Actions
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {teachersList
+            {studentsList
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, i) => {
                 return (
@@ -260,7 +268,29 @@ function Teachers(props) {
                       );
                     })}
 
-                    {/* BOUTON - MODIFIER UN ENSEIGNANT */}
+                    <TableCell>
+                      {/* BOUTON - ENVOYER RÉSULTATS PAR COURRIEL */}
+
+                      <Tooltip title="Envoyer les résultats">
+                        <IconButton
+                          color="primary"
+                        >
+                          <SendIcon />
+                        </IconButton>
+                      </Tooltip>
+
+                      {/* BOUTON - TÉLÉCHARGER RÉSULTATS PDF */}
+
+                      <Tooltip title="Télécharger les résultats">
+                        <IconButton
+                          onClick={() => generatePDF(row._id)}
+                          color="primary"
+                        >
+                          <FindInPageIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                    {/* BOUTON - MODIFIER UN ÉTUDIANT */}
 
                     <TableCell>
                       <Tooltip title="Modifier">
@@ -272,7 +302,7 @@ function Teachers(props) {
                         </IconButton>
                       </Tooltip>
 
-                      {/* BOUTON - SUPPRIMER UN ENSEIGNANT */}
+                      {/* BOUTON - SUPPRIMER UN ÉTUDIANT */}
 
                       <Tooltip title="Supprimer">
                         <IconButton
@@ -292,30 +322,33 @@ function Teachers(props) {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={teachersList.length}
+        count={studentsList.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
+      {/* BOUTON - AJOUTER UN ÉTUDIANT */}
 
-      {/* BOUTON - AJOUTER UN ENSEIGNANT */}
-
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Ajouter un enseignant
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={handleOpenAddStudentForm}
+      >
+        Ajouter un étudiant
       </Button>
 
-      {/* FORMULAIRE POUR L'AJOUT D'UN ENSEIGNANT */}
+      {/* FORMULAIRE POUR L'AJOUT D'UN ÉTUDIANT */}
 
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openAddStudentForm}
+        onClose={handleCloseAddStudentForm}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Nouvel enseignant</DialogTitle>
+        <DialogTitle id="form-dialog-title">Nouvel étudiant</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Pour ajouter un nouvel enseignant, entrez ses informations
+            Pour ajouter un nouvel étudiant, entrez ses informations
             correspondantes.
           </DialogContentText>
           <TextField
@@ -342,32 +375,12 @@ function Teachers(props) {
           <TextField
             variant="outlined"
             margin="dense"
-            id="workPhoneNumber"
-            label="Téléphone du bureau"
+            id="group"
+            label="Groupe"
             type="email"
             fullWidth
-            value={newWorkPhoneNumber}
-            onChange={setWorkPhoneNumber}
-          />
-          <TextField
-            variant="outlined"
-            margin="dense"
-            id="homePhoneNumber"
-            label="Téléphone de la maison"
-            type="email"
-            fullWidth
-            value={newHomePhoneNumber}
-            onChange={setHomePhoneNumber}
-          />
-          <TextField
-            variant="outlined"
-            margin="dense"
-            id="cellphoneNumber"
-            label="Téléphone cellulaire"
-            type="email"
-            fullWidth
-            value={newCellphoneNumber}
-            onChange={setCellphoneNumber}
+            value={newGroup}
+            onChange={setGroup}
           />
           <TextField
             variant="outlined"
@@ -381,16 +394,16 @@ function Teachers(props) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleCloseAddStudentForm} color="primary">
             Annuler
           </Button>
-          <Button onClick={submitTeacher} color="primary">
+          <Button onClick={submitStudent} color="primary">
             Soumettre
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* FORMULAIRE POUR MODIFICATION D'UN ENSEIGNANT */}
+      {/* FORMULAIRE POUR MODIFICATION D'UN ÉTUDIANT */}
 
       <Dialog
         open={openEditForm}
@@ -398,12 +411,11 @@ function Teachers(props) {
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">
-          Modification d'un enseignant
+          Modification d'un étudiant
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Pour modifier un enseignant, entrez ses informations
-            correspondantes.
+            Pour modifier un étudiant, entrez ses informations correspondantes.
           </DialogContentText>
           <TextField
             variant="outlined"
@@ -429,32 +441,12 @@ function Teachers(props) {
           <TextField
             variant="outlined"
             margin="dense"
-            id="workPhoneNumber"
-            label="Téléphone du bureau"
+            id="group"
+            label="Groupe"
             type="email"
             fullWidth
-            value={newWorkPhoneNumber}
-            onChange={setWorkPhoneNumber}
-          />
-          <TextField
-            variant="outlined"
-            margin="dense"
-            id="homePhoneNumber"
-            label="Téléphone de la maison"
-            type="email"
-            fullWidth
-            value={newHomePhoneNumber}
-            onChange={setHomePhoneNumber}
-          />
-          <TextField
-            variant="outlined"
-            margin="dense"
-            id="cellphoneNumber"
-            label="Téléphone cellulaire"
-            type="email"
-            fullWidth
-            value={newCellphoneNumber}
-            onChange={setCellphoneNumber}
+            value={newGroup}
+            onChange={setGroup}
           />
           <TextField
             variant="outlined"
@@ -471,13 +463,13 @@ function Teachers(props) {
           <Button onClick={handleCloseEditForm} color="primary">
             Annuler
           </Button>
-          <Button onClick={modifyTeacher} color="primary">
+          <Button onClick={modifyStudent} color="primary">
             Soumettre
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* AVERTISSEMENT DE SUPPRESSION D'UN ENSEIGNANT */}
+      {/* AVERTISSEMENT DE SUPPRESSION D'UN ÉTUDIANT */}
 
       <Dialog
         open={openConfirmation}
@@ -488,23 +480,22 @@ function Teachers(props) {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle id="alert-dialog-slide-title">
-          {"Êtes-vous certain de vouloir supprimer cet enseignant?"}
+          {"Êtes-vous certain de vouloir supprimer cet étudiant?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            La suppression de cet enseignant sera permanente.
+            La suppression de cet étudiant sera permanente.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={cancelConfirmation} color="primary">
             Annuler
           </Button>
-          <Button onClick={deleteItem.bind(this)} color="primary">
+          <Button onClick={deleteStudent.bind(this)} color="primary">
             Confirmer
           </Button>
         </DialogActions>
       </Dialog>
-
       {/* SNACKBARS */}
       <Snackbar
         open={openSnackbar}
@@ -518,5 +509,3 @@ function Teachers(props) {
     </Paper>
   );
 }
-
-export default Teachers;

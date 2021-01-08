@@ -4,6 +4,7 @@ import Drawer from "./navigation/drawer";
 import Courses from "./pages/Courses";
 import Groups from "./pages/Groups";
 import Login from "./pages/Login";
+import Students from "./pages/Students";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -24,6 +25,7 @@ function App() {
           <Route key= "groups" path="/groupes" exact component={Groups} />
           <Route key="teachers" path="/enseignants" exact component={Teachers} />
           <Route key="courses" path="/matieres" exact component={Courses} />
+          <Route key="courses" path="/eleves" exact component={Students} />
         </Switch>
       </div>
     </Router>
