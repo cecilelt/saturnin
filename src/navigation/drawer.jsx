@@ -29,7 +29,7 @@ const Drawer = props => {
     {
       text: "Accueil",
       icon: <HomeIcon />,
-      onClick: () => history.push("/")
+      onClick: () => history.push("/home")
     },
     {
       text: "Groupes",
@@ -71,6 +71,13 @@ const Drawer = props => {
       onClick: () => history.push("/tests/A20quad2")
     }
     ];
+  const settings = [
+    {
+      text: "Préférences",
+      icon: <EmojiObjectsIcon />,
+      onClick: () => history.push("/preferences")
+    }
+  ];
   return (
     <MUIDrawer variant="permanent" className={classes.drawer}>
         <List>
@@ -108,6 +115,18 @@ const Drawer = props => {
             );
             })}
         </List>
+      <Divider />
+      <List>
+        {settings.map((item, index) => {
+          const { text, icon, onClick } = item;
+          return (
+              <ListItem button key={text} onClick={onClick}>
+                {icon && <ListItemIcon>{icon}</ListItemIcon>}
+                <ListItemText primary={text} />
+              </ListItem>
+          );
+        })}
+      </List>
     </MUIDrawer>
   );
 };
