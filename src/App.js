@@ -21,6 +21,7 @@ function App() {
   // For the token when logging in
   const { token, setToken } = useToken();
   if(!token) {
+    console.log("Token : " + token)
     return <LoginDashboard setToken={setToken} />
   }
   return (

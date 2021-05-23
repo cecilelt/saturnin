@@ -9,12 +9,16 @@ const theme = createMuiTheme({
     palette: {
         primary: {
             // turquoise
-            main: "#66ccba",
+            main: "#4683e0",
         },
         secondary: {
             // salmon
             main: "#fc6d6d",
         },
+    },
+    typography: {
+        fontFamily: 'Optima',
+        fontSize:15
     },
 });
 

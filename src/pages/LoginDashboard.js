@@ -1,6 +1,6 @@
 import React , { useState } from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import Login_background from "../assets/login.jpg";
+import Login_background from "../assets/pencils.jpg";
 import Grid from "@material-ui/core/Grid";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
@@ -13,6 +13,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import PropTypes from 'prop-types';
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 async function loginUser(credentials) {
-    return fetch('http://localhost:3001/login', {
+    return fetch('http://localhost:3001/token', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -62,11 +63,12 @@ function LoginDashboard({ setToken }) {
     const [password, setPassword] = useState();
 
     const handleSubmit = async e => {
+        const credentials = {
+            username: username,
+            password: password
+        }
         e.preventDefault();
-        const token = await loginUser({
-            username,
-            password
-        });
+        const token = await loginUser(credentials);
         setToken(token);
     }
 
@@ -80,7 +82,7 @@ function LoginDashboard({ setToken }) {
                       <LockOutlinedIcon />
                   </Avatar>
                   <Typography component="h1" variant="h5">
-                      Connexion
+                      CALIMERO
                   </Typography>
                   <form className={classes.form} noValidate onSubmit={handleSubmit}>
                       <TextField
@@ -88,10 +90,10 @@ function LoginDashboard({ setToken }) {
                           margin="normal"
                           required
                           fullWidth
-                          id="email"
-                          label="Adresse courriel"
-                          name="email"
-                          autoComplete="email"
+                          id="username"
+                          label="Identifiant"
+                          name="username"
+                          autoComplete="username"
                           autoFocus
                           onChange={e => setUserName(e.target.value)}
                       />
@@ -107,10 +109,7 @@ function LoginDashboard({ setToken }) {
                           autoComplete="current-password"
                           onChange={e => setPassword(e.target.value)}
                       />
-                      <FormControlLabel
-                          control={<Checkbox value="remember" color="primary" />}
-                          label="Se souvenir de moi"
-                      />
+
                       <Button
                           type="submit"
                           fullWidth
@@ -122,12 +121,12 @@ function LoginDashboard({ setToken }) {
                       </Button>
                       <Grid container>
                           <Grid item xs>
-                              <Link href="#" variant="body2">
+                              <Link href="#" >
                                   Mot de passe oublié?
                               </Link>
                           </Grid>
                           <Grid item>
-                              <Link href="#" variant="body2">
+                              <Link href="#">
                                   {"Pas encore de compte? S'inscrire"}
                               </Link>
                           </Grid>
