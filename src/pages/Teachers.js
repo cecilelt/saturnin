@@ -24,6 +24,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
+import '../styles/DataTables.css'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -220,12 +221,12 @@ function Teachers(props) {
   }
 
   return (
-    <Paper className={classes.root}>
-    <h1>Enseignants</h1>
+    <div className={classes.root}>
+    <h1 class="pageHeader">Enseignants</h1>
 
       {/* TABLE DES ENSEIGNANTS */}
 
-      <TableContainer className={classes.container}>
+      <TableContainer class="dataTable" className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
@@ -300,10 +301,11 @@ function Teachers(props) {
       />
 
       {/* BOUTON - AJOUTER UN ENSEIGNANT */}
-
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Ajouter un enseignant
-      </Button>
+      <div className="addElement">
+        <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+          Ajouter un enseignant
+        </Button>
+      </div>
 
       {/* FORMULAIRE POUR L'AJOUT D'UN ENSEIGNANT */}
 
@@ -515,7 +517,7 @@ function Teachers(props) {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-    </Paper>
+    </div>
   );
 }
 

@@ -106,7 +106,7 @@ export default function Groups() {
   }
 
   return (
-    <Paper className={classes.root}>
+    <div className={classes.root}>
       {/* TITRE DES ONGLETS */}
 
       <Tabs
@@ -195,6 +195,6 @@ export default function Groups() {
           </Button>
         </DialogActions>
       </Dialog>
-    </Paper>
+    </div>
   );
 }

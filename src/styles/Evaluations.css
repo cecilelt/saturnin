@@ -1,0 +1,42 @@
+.MuiButton-root
+{
+    width: 20%;
+}
+
+.pageHeader{
+    font-size: 30px;
+    text-align: center;
+}
+
+.buttons-div
+{
+    margin-left: auto;
+    margin-right: 0;
+    width: 20%;
+}
+.stepper-container
+{
+    width: 80%;
+    margin: auto;
+    padding: 15px;
+}
+
+.semester-container
+{
+    margin: auto;
+    align-items: center;
+    width: 45%;
+}
+
+.MuiFormControl-root {
+    width: 100%;
+}
+
+ .MuiButton-containedPrimary {
+     width: 40% !important;
+ }
+
+.makeStyles-button-4 {
+    margin-right: 15px;
+    width: 50%;
+}

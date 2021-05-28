@@ -24,6 +24,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
+import '../styles/DataTables.css'
+import SemesterSelector from "../components/SemesterSelector";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -43,6 +45,7 @@ const columns = [
     { id: "level", label: "Niveau", minWidth: 100 },
     { id: "numStudents", label: "Nombre d'élèves", minWidth: 100 },
     { id: "teacher", label: "Enseignant", minWidth: 100 },
+    { id: "semester", label: "Semestre", minWidth: 100 },
 ];
 
 function Courses(props) {
@@ -52,6 +55,7 @@ function Courses(props) {
     const [newLevel, setNewLevel] = useState("");
     const [newNumStudent, setNewNumStudents] = useState("");
     const [newTeacher, setNewTeacher] = useState("");
+    const [newSemesterName, setNewSemesterName] = useState("");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [open, setOpen] = useState(false);
@@ -144,6 +148,7 @@ function Courses(props) {
             setNewLevel(modifiedCourse.level);
             setNewNumStudents(modifiedCourse.numStudents);
             setNewTeacher(modifiedCourse.teacher);
+            setNewSemesterName(modifiedCourse.semester);
         });
     }
 
@@ -156,15 +161,17 @@ function Courses(props) {
         });
     }
 
-    function submitTeacher() {
+    function submitCourse() {
         setOpen(false);
         const savedCourse = {
             courseName: newCourseName,
             level: newLevel,
             numStudents: newNumStudent,
             teacher: newTeacher,
+            semester: newSemesterName
         };
 
+        console.log(savedCourse)
         axios.post("/courses", savedCourse).then((response) => {
             resetTextFields();
             setOpenSnackbar(true);
@@ -180,6 +187,7 @@ function Courses(props) {
             level: newLevel,
             numStudents: newNumStudent,
             teacher: newTeacher,
+            semester: newSemesterName
         };
 
         axios
@@ -198,13 +206,18 @@ function Courses(props) {
         setNewTeacher("");
     }
 
+    function getSemesterName(semesterName) {
+        setNewSemesterName(semesterName)
+        console.log("DANS COURSE " + semesterName)
+    }
+
     return (
-        <Paper className={classes.root}>
-            <h1>Matières</h1>
+        <div className={classes.root}>
+            <h1 class="pageHeader">Matières</h1>
 
             {/* TABLE DES MATIÈRES */}
 
-            <TableContainer className={classes.container}>
+            <TableContainer class="dataTable" className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>
@@ -279,10 +292,11 @@ function Courses(props) {
             />
 
             {/* BOUTON - AJOUTER UN COURS */}
-
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                Ajouter un cours
-            </Button>
+            <div class="addElement">
+                <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+                    Ajouter un cours
+                </Button>
+            </div>
 
             {/* FORMULAIRE POUR L'AJOUT D'UN COURS */}
 
@@ -338,13 +352,14 @@ function Courses(props) {
                         value={newTeacher}
                         onChange={setTeacher}
                     />
+                    <SemesterSelector sendSemesterName={getSemesterName}/>
 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Annuler
                     </Button>
-                    <Button onClick={submitTeacher} color="primary">
+                    <Button onClick={submitCourse} color="primary">
                         Soumettre
                     </Button>
                 </DialogActions>
@@ -406,6 +421,8 @@ function Courses(props) {
                         value={newTeacher}
                         onChange={setTeacher}
                     />
+                    <SemesterSelector sendSemesterName={getSemesterName}/>
+
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseEditForm} color="primary">
@@ -455,7 +472,7 @@ function Courses(props) {
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
-        </Paper>
+        </div>
     );
 }
 

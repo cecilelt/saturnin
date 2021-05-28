@@ -1,0 +1,27 @@
+.submitDiv
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+.MuiButton-containedPrimary
+{
+    width: 50%;
+}
+
+.maskInput
+{
+    padding-top: 20px;
+}
+
+.roleInput
+{
+    padding-top:8px;
+}
+.fieldsContainer
+{
+    width: 80%;
+    margin: auto;
+}

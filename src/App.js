@@ -5,6 +5,8 @@ import Courses from "./pages/Courses";
 import Groups from "./pages/Groups";
 import Students from "./pages/Students";
 import Preferences from "./pages/Preferences";
+import SignUp from "./pages/SignUp";
+import Evaluations from "./pages/Evaluations";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import LoginDashboard from "./pages/LoginDashboard";
@@ -22,18 +24,29 @@ function App() {
   const { token, setToken } = useToken();
   if(!token) {
     console.log("Token : " + token)
-    return <LoginDashboard setToken={setToken} />
+    if(window.location.pathname == "/inscription")
+    {
+      return <SignUp setToken={setToken} />
+    }
+    else
+    {
+      return <LoginDashboard setToken={setToken} />
+    }
   }
+
+
   return (
     <Router>
       <div className={classes.container}>
         <Drawer />
         <Switch>
+          <Route key="inscription" path="/inscription" exact component={SignUp} />
           <Route key="preferences" path="/preferences" exact component={Preferences} />
           <Route key= "groups" path="/groupes" exact component={Groups} />
           <Route key="teachers" path="/enseignants" exact component={Teachers} />
           <Route key="courses" path="/matieres" exact component={Courses} />
-          <Route key="courses" path="/eleves" exact component={Students} />
+          <Route key="students" path="/eleves" exact component={Students} />
+          <Route key="evaluations" path="/evaluations" exact component={Evaluations} />
         </Switch>
       </div>
     </Router>

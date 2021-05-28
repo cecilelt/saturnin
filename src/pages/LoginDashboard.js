@@ -8,12 +8,9 @@ import Avatar from "@material-ui/core/Avatar";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import PropTypes from 'prop-types';
-import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -84,7 +81,7 @@ function LoginDashboard({ setToken }) {
                   <Typography component="h1" variant="h5">
                       CALIMERO
                   </Typography>
-                  <form className={classes.form} noValidate onSubmit={handleSubmit}>
+                  <form className={classes.form} onSubmit={handleSubmit}>
                       <TextField
                           variant="outlined"
                           margin="normal"
@@ -109,16 +106,17 @@ function LoginDashboard({ setToken }) {
                           autoComplete="current-password"
                           onChange={e => setPassword(e.target.value)}
                       />
+                          <Button
+                              type="submit"
+                              variant="contained"
+                              color="primary"
+                              className={classes.submit}
+                              fullWidth
+                          >
+                              Connexion
+                          </Button>
 
-                      <Button
-                          type="submit"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          className={classes.submit}
-                      >
-                          Connexion
-                      </Button>
+
                       <Grid container>
                           <Grid item xs>
                               <Link href="#" >
@@ -126,7 +124,7 @@ function LoginDashboard({ setToken }) {
                               </Link>
                           </Grid>
                           <Grid item>
-                              <Link href="#">
+                              <Link href="/inscription">
                                   {"Pas encore de compte? S'inscrire"}
                               </Link>
                           </Grid>

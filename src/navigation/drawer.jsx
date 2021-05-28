@@ -14,6 +14,7 @@ import FaceIcon from "@material-ui/icons/Face";
 import MenuBook from "@material-ui/icons/MenuBook";
 import SchoolIcon from '@material-ui/icons/School';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
+import HowToRegIcon from '@material-ui/icons/HowToReg';
 import { withRouter } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -61,15 +62,10 @@ const Drawer = props => {
     ];
     const tests = [
     {
-      text: "A20 - Quad 1",
-      icon: <EmojiObjectsIcon />,
-      onClick: () => history.push("/tests/A20quad1")
+      text: "Évaluer",
+      icon: <HowToRegIcon />,
+      onClick: () => history.push("/evaluations")
     },
-    {
-      text: "A20 - Quad 2",
-      icon: <EmojiObjectsIcon />,
-      onClick: () => history.push("/tests/A20quad2")
-    }
     ];
   const settings = [
     {
