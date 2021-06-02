@@ -9,20 +9,21 @@ function CourseSelector(props) {
 
     // USE STATE :
     useEffect(() => {
-        getAllCoursesNames();
+        let mounted = true;
+
+        axios.get("/courses/" + props.semester).then((response) => {
+            if(mounted) {
+                setCoursesNamesList(response.data);
+            }
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
+        return () => mounted = false;
     }, []);
 
     const setNewName = (event) => {
         console.log("DANS SEMESTER COLLECTOR" + event.target.value)
         props.sendCourseName(event.target.value)
     };
-
-    function getAllCoursesNames() {
-        axios.get("/courses/" + props.semester).then((response) => {
-            setCoursesNamesList(response.data);
-        });
-    }
 
   return (
     <div class="semester-container">

@@ -9,19 +9,19 @@ function SemesterSelector(props) {
 
     // USE STATE :
     useEffect(() => {
-        getAllSemesterNames();
+        let mounted = true;
+        axios.get("/semesters").then((response) => {
+            if(mounted) {
+                setSemestersNamesList(response.data);
+            }
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
+        return () => mounted = false;
     }, []);
 
     const setNewName = (event) => {
         props.sendSemesterName(event.target.value)
     };
-
-    function getAllSemesterNames() {
-        axios.get("/semesters").then((response) => {
-            setSemestersNamesList(response.data);
-        });
-    }
 
   return (
     <div class="semester-container">

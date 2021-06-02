@@ -35,11 +35,14 @@ function StudentsGradesList(props) {
         axios.get("/grades/" + props.testId + "/" + props.groupId).then((response) => {
             if(mounted)
             {
-                setGradesList(response.data);
-                console.log(gradesList)
-                gradesList.map((grade) => {
-                    grade['id'] = grade._id
-                })
+                if(Object.keys(response.data).length !== 0 && response.data.constructor !== Object)
+                {
+                    setGradesList(response.data);
+                    gradesList.map((grade) => {
+                        grade['id'] = grade._id
+                    })
+                }
+
             }
         });
         return () => mounted = false;
@@ -56,17 +59,52 @@ function StudentsGradesList(props) {
                     gradePercentage: { ...props, error: !isValid },
                 };
                 setEditRowsModel((state) => ({ ...state, ...newState }));
+                if (isValid)
+                {
+                    modifyGrade(props.value, id)
+                }
+            }
+            else if (field === 'isPresent') {
+                console.log(JSON.stringify(props))
+                modifyIsPresent(props.value, id)
             }
         },
         [editRowsModel],
     );
+
+    function modifyGrade(newGradePercentage, gradeId) {
+        const modifiedGrade = {
+            gradePercentage: newGradePercentage,
+        };
+        axios.patch("/grades/" + gradeId, modifiedGrade)
+        axios.get("/grades/" + props.testId + "/" + props.groupId).then((response) => {
+            setGradesList(response.data);
+            gradesList.map((grade) => {
+                grade['id'] = grade._id
+            })
+        });
+    }
+
+    function modifyIsPresent(newIsPresent, gradeId) {
+        const modifiedIsPresent = {
+            isPresent: newIsPresent,
+        };
+        axios.patch("/grades/" + gradeId, modifiedIsPresent)
+        axios.get("/grades/" + props.testId + "/" + props.groupId).then((response) => {
+            setGradesList(response.data);
+            console.log(gradesList)
+            gradesList.map((grade) => {
+                grade['id'] = grade._id
+            })
+        });
+    }
 
     function validateGrade(grade) {
         return grade >= 0 && grade <= 100;
     }
 
     return (
-        <div style={{ height: 400, width: '100%' }}>
+        <div style={{ height: 700, width: '65%', margin: 'auto' }}>
             <DataGrid
                 className={classes.root}
                 rows={gradesList}
@@ -91,6 +129,7 @@ const columns = [
     {
         field: 'studentName',
         headerName: "Nom de l'élève",
+        type: 'string',
         width: 200,
         editable: false,
     },
