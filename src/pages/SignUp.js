@@ -109,9 +109,6 @@ function SignUp({ setToken }) {
         setRole(event.target.value);
     };
 
-    const handleOpenAccountCreation = () => {
-        setOpenAccountConfirmation(true);
-    };
     const handleCloseAccountCreation = () => {
         setOpenAccountConfirmation(false);
     };
@@ -141,10 +138,6 @@ function SignUp({ setToken }) {
         });
     }
 
-    function resetTextFields() {
-        setFirstName("");
-
-    }
     return(
         <Grid container component="main" className={classes.root}>
             <CssBaseline />

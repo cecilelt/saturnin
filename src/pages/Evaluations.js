@@ -5,10 +5,12 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import SemesterSelector from "../components/SemesterSelector";
+import SemesterSelector from "../components/evaluations/SemesterSelector";
 import '../styles/Evaluations.css'
-import CourseSelector from "../components/CourseSelector";
-import GroupSelector from "../components/GroupSelector";
+import CourseSelector from "../components/evaluations/CourseSelector";
+import GroupSelector from "../components/evaluations/GroupSelector";
+import TestsList from "../components/evaluations/TestsList";
+import StudentsGradesList from "../components/evaluations/StudentsGradesList";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,18 +26,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getSteps() {
-    return ['Semestre', 'Matière', 'Groupe', "Évaluation", 'Étudiants'];
+    return ['Semestre', 'Matière', 'Groupe', "Tests", 'Étudiants'];
 }
-
-
 
 function Evaluations() {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const [skipped, setSkipped] = React.useState(new Set());
-    const [semesterName, setSemesterName] = useState([]);
-    const [courseName, setCourseName] = useState([]);
-    const [group, setGroup] = useState([]);
+    const [semesterId, setSemesterId] = useState("");
+    const [courseId, setCourseId] = useState("");
+    const [groupId, setGroupId] = useState("");
+    const [testId, setTestId] = useState("");
 
     const steps = getSteps();
 
@@ -65,36 +66,42 @@ function Evaluations() {
     function getStepContent(step) {
         switch (step) {
             case 0:
-                return <SemesterSelector sendSemesterName={getData}/>
+                return <SemesterSelector sendSemesterName={getSemester}/>
             case 1:
-                return <CourseSelector semester={semesterName} sendCourseName={getCourseName}/>;
+                return <CourseSelector semester={semesterId} sendCourseName={getCourseName}/>;
             case 2:
                 return <GroupSelector sendGroup={getGroup}/>;
             case 3:
-                return 'Liste des évaluations';
+                return <TestsList sendTestId={getTest} semesterId={semesterId} courseId={courseId} groupId={groupId}/>;
             case 4:
-                return 'Liste des étudiants';
+                return <StudentsGradesList testId={testId} groupId={groupId}/>;
             default:
                 return '';
         }
     }
 
-    function getData(val) {
-        setSemesterName(val)
+    function getSemester(semester) {
+        console.log("Semester Id: " + semester)
+        setSemesterId(semester)
     }
 
-    function getCourseName(courseName) {
-        setCourseName(courseName)
+    function getCourseName(course) {
+        console.log("Course Id: " + course)
+        setCourseId(course)
     }
 
     function getGroup(group) {
-        setGroup(group)
+        console.log("Group Id: " + group)
+        setGroupId(group)
     }
 
+    function getTest(test) {
+        console.log("Test Id: " + test)
+        setTestId(test)
+    }
 
     return(
         <div className={classes.root}>
-            <h1 class="pageHeader">Évaluer</h1>
             <div class="stepper-container">
                 <Stepper activeStep={activeStep}>
                     {steps.map((label, index) => {

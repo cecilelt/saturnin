@@ -1,4 +1,4 @@
-import React,  { useState } from "react";
+import React from "react";
 import Teachers from "./pages/Teachers";
 import Drawer from "./navigation/drawer";
 import Courses from "./pages/Courses";
@@ -24,7 +24,7 @@ function App() {
   const { token, setToken } = useToken();
   if(!token) {
     console.log("Token : " + token)
-    if(window.location.pathname == "/inscription")
+    if(window.location.pathname === "/inscription")
     {
       return <SignUp setToken={setToken} />
     }

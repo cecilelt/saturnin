@@ -2,20 +2,18 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
-import '../styles/Evaluations.css'
+import '../../styles/Evaluations.css'
 
 function SemesterSelector(props) {
     const [semestersList, setSemestersNamesList] = useState([]);
-    const [newSemesterName, setNewSemesterName] = useState(0);
 
     // USE STATE :
     useEffect(() => {
         getAllSemesterNames();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const setNewName = (event) => {
-        setNewSemesterName(event.target.value);
-        console.log("DANS SEMESTER COLLECTOR" + event.target.value)
         props.sendSemesterName(event.target.value)
     };
 
@@ -37,7 +35,7 @@ function SemesterSelector(props) {
             helperText="Veuillez sélectionner un semestre"
         >
             {semestersList.map((semester) => (
-                <MenuItem key={semester.name} value={semester._id}>
+                <MenuItem key={semester._id} value={semester._id}>
                     {semester.name}
                 </MenuItem>
             ))}

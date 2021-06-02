@@ -2,19 +2,18 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
-import '../styles/Evaluations.css'
+import '../../styles/Evaluations.css'
 
 function CourseSelector(props) {
     const [coursesList, setCoursesNamesList] = useState([]);
-    const [newCourseName, setNewCourseName] = useState(0);
 
     // USE STATE :
     useEffect(() => {
         getAllCoursesNames();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const setNewName = (event) => {
-        setNewCourseName(event.target.value);
         console.log("DANS SEMESTER COLLECTOR" + event.target.value)
         props.sendCourseName(event.target.value)
     };
@@ -23,8 +22,6 @@ function CourseSelector(props) {
         axios.get("/courses/" + props.semester).then((response) => {
             setCoursesNamesList(response.data);
         });
-        console.log("DANS COURSE SELECTOR: " + coursesList)
-
     }
 
   return (
